@@ -163,7 +163,7 @@ def get_entry_data():
     from sklearn.model_selection import train_test_split
     from sklearn import metrics 
 
-    data = pd.read_csv('WA_Fn-UseC_-HR-Employee-Attrition.csv')
+    data = pd.read_csv('Datasets/WA_Fn-UseC_-HR-Employee-Attrition.csv')
     data = data.drop(columns=['StandardHours','EmployeeCount','Over18','EmployeeNumber','StockOptionLevel'])
 
     le = preprocessing.LabelEncoder()
