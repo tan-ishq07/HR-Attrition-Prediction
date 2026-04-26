@@ -15,187 +15,139 @@ over_time=3
 
 
 def get_entry_data():
+    import numpy as np
+    import pandas as pd
+    from tkinter import messagebox
+
     age = int(el1.get())
 
     if el2.get() == "Non Travel":
-         business_travel=0
+        business_travel = 0
     elif el2.get() == "Travel Frequently":
-        business_travel=1
-    elif el2.get() == "Travel Rarely":
-        business_travel=2
+        business_travel = 1
+    else:
+        business_travel = 2
 
     daily_rate = int(el3.get())
 
     if el4.get() == "Human Resources":
-         dept=0
+        dept = 0
     elif el4.get() == "Research & Development":
-        dept=1
-    elif el4.get() == "Sales":
-        dept=2
+        dept = 1
+    else:
+        dept = 2
 
     dist_home = int(el5.get())
-
     education = int(el6.get())
 
     if el7.get() == "Human Resources":
-         edu_field=0
+        edu_field = 0
     elif el7.get() == "Life Sciences":
-        edu_field=1
+        edu_field = 1
     elif el7.get() == "Marketing":
-        edu_field=2
+        edu_field = 2
     elif el7.get() == "Medical":
-    	edu_field=3
-    elif el7.get() == "Other":
-    	edu_field=4
+        edu_field = 3
+    else:
+        edu_field = 4
 
     Environment_satification = int(el8.get())
 
     if el9.get() == "Female":
-         gender=0
-    elif el9.get() == "Male":
-        gender=1    
+        gender = 0
+    else:
+        gender = 1
 
     Hourly_rate = int(el10.get())
-
     job_invol = int(el11.get())
-
     job_level = int(el12.get())
 
     if el13.get() == "Health Care Representative":
-         job_role=0
+        job_role = 0
     elif el13.get() == "Human Resources":
-        job_role=1
+        job_role = 1
     elif el13.get() == "Laboratory Technician":
-        job_role=2
+        job_role = 2
     elif el13.get() == "Manager":
-    	job_role=3
+        job_role = 3
     elif el13.get() == "Manufacturing Director":
-    	job_role=4
+        job_role = 4
     elif el13.get() == "Research Director":
-    	job_role=5
+        job_role = 5
     elif el13.get() == "Research Scientist":
-    	job_role=6
-    elif el13.get() == "Sales Executive":
-    	job_role=7
+        job_role = 6
+    else:
+        job_role = 7
 
     job_satisifaction = int(el14.get())
 
     if el15.get() == "Single":
-         martital=0
+        martital = 0
     elif el15.get() == "Divorced":
-        martital=1
-    elif el15.get() == "Married":
-        martital=2
+        martital = 1
+    else:
+        martital = 2
 
     monthly_income = int(el16.get())
-
     monthly_rate = int(el17.get())
-
     num_company = int(el18.get())
 
     if el19.get() == "No":
-         over_time=0
-    elif el19.get() == "Yes":
-        over_time=1
+        over_time = 0
+    else:
+        over_time = 1
 
     salary_hike = int(el20.get())
-
-    performance_rate = int(el21.get())       
-
+    performance_rate = int(el21.get())
     relationship_satisfaction = int(el22.get())
-
     total_work_years = int(el23.get())
-
     training_time = int(el24.get())
-
-    work_life_bal = int(el25.get())       
-
+    work_life_bal = int(el25.get())
     year_at_company = int(el26.get())
-
     year_in_role = int(el27.get())
-
     last_promotion = int(el28.get())
-
     current_manager = int(el29.get())
 
-    y_pred = []
+    # Prepare input
+    input_data = [[
+        age, business_travel, daily_rate, dept, dist_home,
+        education, edu_field, Environment_satification, gender, Hourly_rate,
+        job_invol, job_level, job_role, job_satisifaction, martital,
+        monthly_income, monthly_rate, num_company, over_time,
+        salary_hike, performance_rate, relationship_satisfaction,
+        total_work_years, training_time, work_life_bal,
+        year_at_company, year_in_role, last_promotion,
+        current_manager
+    ]]
 
-    y_pred.append(age)
-    y_pred.append(business_travel)
-    y_pred.append(daily_rate)
-    y_pred.append(dept)
-    y_pred.append(dist_home)
-    y_pred.append(education)
-    y_pred.append(edu_field)
-    y_pred.append(Environment_satification)
-    y_pred.append(gender)
-    y_pred.append(Hourly_rate)
-    y_pred.append(job_invol)
-    y_pred.append(job_level)
-    y_pred.append(job_role)
-    y_pred.append(job_satisifaction)
-    y_pred.append(martital)
-    y_pred.append(monthly_income)
-    y_pred.append(monthly_rate)
-    y_pred.append(num_company)
-    y_pred.append(over_time)
-    y_pred.append(salary_hike)
-    y_pred.append(performance_rate)
-    y_pred.append(relationship_satisfaction)
-    y_pred.append(total_work_years)
-    y_pred.append(training_time)
-    y_pred.append(work_life_bal)
-    y_pred.append(year_at_company)
-    y_pred.append(year_in_role)
-    y_pred.append(last_promotion)
-    y_pred.append(current_manager)
-
-    y_pred = np.reshape(y_pred,(1,-1))
-
-    print(y_pred)
-
-    from pandas import DataFrame
-    import matplotlib.pyplot as plt
-    import seaborn as sns
-
-    from sklearn import preprocessing
-    import math
-    from sklearn.model_selection import train_test_split
-    from sklearn import metrics 
-
+    # Load dataset
     data = pd.read_csv('Datasets/WA_Fn-UseC_-HR-Employee-Attrition.csv')
     data = data.drop(columns=['StandardHours','EmployeeCount','Over18','EmployeeNumber','StockOptionLevel'])
 
+    from sklearn import preprocessing
     le = preprocessing.LabelEncoder()
-    categorial_variables = ['Attrition','BusinessTravel','Department','EducationField','Gender','JobRole','MaritalStatus','OverTime']
-    for i in categorial_variables:
-        data[i] = le.fit_transform(data[i])
-    data.head(5)
-    data.to_csv('LabelEncoded_CleanData.csv')
-
-    target = data['Attrition']
-    train = data.drop('Attrition',axis = 1)
-
-    #def train_test_error(y_train,y_test):
-    #	test_error = ((y_test==Y_test).sum())/len(Y_test)*10
-    #	test_accuracy = test_error
-
-    X_train, X_test, Y_train, Y_test = train_test_split(train, target, test_size=0.33, random_state=42)
+    categorical = ['Attrition','BusinessTravel','Department','EducationField','Gender','JobRole','MaritalStatus','OverTime']
     
+    for col in categorical:
+        data[col] = le.fit_transform(data[col])
+
+    X = data.drop('Attrition', axis=1)
+    y = data['Attrition']
+
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+
     from sklearn.linear_model import LogisticRegression
-    log_reg = LogisticRegression()
-    log_reg.fit(X_train,Y_train)
-    test_predict = log_reg.predict(X_test)
-    test_accuracy = log_reg.score(X_test,Y_test)
-    #train_test_error(train_predict , test_predict)
+    model = LogisticRegression(max_iter=1000)
+    model.fit(X_train, y_train)
 
-    txt = log_reg.predict(y_pred)
+    # Prediction
+    result = model.predict(input_data)
 
-    if txt == 0:
-    	messagebox.showinfo("ATTRITION", "EMPLOYEE WILL STAY")
+    if result[0] == 0:
+        messagebox.showinfo("Result", "Employee will STAY")
     else:
-        messagebox.showinfo("ATTRITION", "CHANCE OF EMPLOYEE WILL LEAVE")
-
+        messagebox.showinfo("Result", "Employee may LEAVE")
 gui = Tk()
 
 gui.title('HR ANALYSIS OF EMPLOYEE ATTRITION GUI')
